@@ -158,22 +158,31 @@ Le tableau de bord principal présente une vue synthétique des principaux indic
 
 Analyse de l'évolution des ventes et de l'activité commerciale au fil du temps.
 
+![Executive Overview](deliverables/screenshots/02_sales_performance.png)
+
 ### 3.3 Analyse des produits (Product Analysis)
 
 Exploration des performances des produits et des tendances transactionnelles.
+
+![Executive Overview](deliverables/screenshots/03_product_analysis.png)
 
 ### 3.4 Analyse des clients (Customer Analysis)
 
 Analyse de l'activité des clients et de leurs comportements d'achat.
 
+![Executive Overview](deliverables/screenshots/04_customer_analysis.png)
+
 ### 3.5 Analyse géographique (Geographic Analysis)
 
 Comparaison de l'activité commerciale entre les différents pays.
+
+![Executive Overview](deliverables/screenshots/05_geographic_analysis.png)
 
 ### 3.6 Annulations et mouvements négatifs (Cancellations & Negative Movements)
 
 Étude des factures annulées et des transactions comportant des quantités ou des montants négatifs.
 
+![Executive Overview](deliverables/screenshots/06_cancellations_negative_movements.png)
 ---
 
 ## 4. Architecture technique
