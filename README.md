@@ -152,6 +152,8 @@ Le rapport Power BI comprend six pages analytiques conçues pour présenter diff
 
 Le tableau de bord principal présente une vue synthétique des principaux indicateurs de performance du commerce de détail.
 
+![Executive Overview](deliverables/screenshots/01_executive_overview.png)
+
 ### 3.2 Performance des ventes (Sales Performance)
 
 Analyse de l'évolution des ventes et de l'activité commerciale au fil du temps.
