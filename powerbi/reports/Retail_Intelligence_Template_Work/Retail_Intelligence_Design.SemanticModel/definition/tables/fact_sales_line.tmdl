@@ -1,0 +1,750 @@
+table fact_sales_line
+	lineageTag: 5f4f2e2d-acb2-4eb0-ba27-9f6b0ea4545a
+
+	measure 'Total Revenue' = ```
+			
+			SUM ( fact_sales_line[line_amount] )
+			
+			```
+		lineageTag: 66ede34c-3f47-4a98-b0b6-1fe478fb1b55
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Total Orders' =
+			
+			CALCULATE (
+			    DISTINCTCOUNT ( fact_sales_line[invoice_no] ),
+			    fact_sales_line[invoice_type] = "Normal"
+			)
+		formatString: 0
+		lineageTag: effde59d-436e-4b16-9eda-49ade2a284a4
+
+	measure 'Total Customers' =
+			
+			DISTINCTCOUNTNOBLANK ( dim_customer[customer_id] )
+		formatString: #,0
+		lineageTag: 33c81a08-63f8-4317-a886-94d75ceeedab
+
+	measure 'Total Units Sold' =
+			
+			CALCULATE (
+			    SUM ( fact_sales_line[quantity] ),
+			    fact_sales_line[quantity] > 0
+			)
+		formatString: 0
+		lineageTag: 95dea879-1c14-4fc4-8293-4500d3b8536c
+
+	measure 'Cancelled Orders' =
+			
+			CALCULATE (
+			    DISTINCTCOUNT ( fact_sales_line[invoice_no] ),
+			    fact_sales_line[invoice_type] = "cancelled"
+			)
+		formatString: 0
+		lineageTag: 8ac3ed8f-8b73-4196-8b74-239674f38253
+
+	measure 'Cancellation Rate' =
+			
+			DIVIDE (
+			    [Cancelled Orders],
+			    [Total Orders] + [Cancelled Orders],
+			    0
+			)
+		formatString: 0.00\ %;-0.00\ %;0.00\ %
+		lineageTag: 934d582b-7f83-44a5-9bd8-5fbec46a25a0
+
+	measure 'Revenue from Normal Sales' =
+			
+			CALCULATE (
+			    SUM ( fact_sales_line[line_amount] ),
+			    fact_sales_line[invoice_type] = "normal",
+			    fact_sales_line[quantity] > 0
+			)
+		formatString: "£"#,0;-"£"#,0;"£"#,0
+		lineageTag: 6515e315-09f9-468b-aec1-105ded8fa5ba
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-GB"}
+
+	measure 'Average Order Value' =
+			
+			DIVIDE (
+			    [Revenue from Normal Sales],
+			    [Total Orders],
+			    0
+			)
+		formatString: "£"#,0.00;-"£"#,0.00;"£"#,0.00
+		lineageTag: fd0cca8a-1fa0-4e62-9594-9a8b49bd0f82
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-GB"}
+
+	measure 'Average Selling Price' =
+			
+			DIVIDE (
+			    [Revenue from Normal Sales],
+			    CALCULATE (
+			        SUM ( fact_sales_line[quantity] ),
+			        fact_sales_line[invoice_type] = "normal",
+			        fact_sales_line[quantity] > 0
+			    ),
+			    0
+			)
+		formatString: "£"#,0.00;-"£"#,0.00;"£"#,0.00
+		lineageTag: f80c07b2-7350-418f-b29a-1d5d679b64a0
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-GB"}
+
+	measure 'Revenue per Day' =
+			
+			DIVIDE (
+			    [Revenue from Normal Sales],
+			    CALCULATE (
+			        DISTINCTCOUNT ( dim_date[full_date] ),
+			        fact_sales_line[invoice_type] = "normal",
+			        fact_sales_line[quantity] > 0
+			    ),
+			    0
+			)
+		formatString: "£"#,0.00;-"£"#,0.00;"£"#,0.00
+		lineageTag: 5cfd0180-3065-436d-a2ba-ae85ceed0aab
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-GB"}
+
+	measure 'Total Products' =
+			
+			DISTINCTCOUNTNOBLANK ( dim_product[stock_code] )
+		formatString: 0
+		lineageTag: 06643259-dde7-42b3-bfc5-fd8014a0dc75
+
+	measure 'Top Product Revenue' =
+			
+			MAXX (
+			    VALUES ( dim_product[stock_code] ),
+			    [Revenue from Normal Sales]
+			)
+		formatString: "£"#,0.00;-"£"#,0.00;"£"#,0.00
+		lineageTag: 571b8e34-c761-449d-8de0-159b43aa22be
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-GB"}
+
+	measure 'Units Sold Normal' =
+			
+			CALCULATE (
+			    SUM ( fact_sales_line[quantity] ),
+			    fact_sales_line[invoice_type] = "normal",
+			    fact_sales_line[quantity] > 0
+			)
+		formatString: 0
+		lineageTag: 9e730d1c-dbb8-46b4-861a-0ff1bb3eaa80
+
+	measure 'Top Product Units Sold' =
+			
+			MAXX (
+			    VALUES ( dim_product[stock_code] ),
+			    [Units Sold Normal]
+			)
+		formatString: "£"#,0.00;-"£"#,0.00;"£"#,0.00
+		lineageTag: 2e510592-acce-4411-9a58-cd85a03d36e6
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-GB"}
+
+	measure 'Average Revenue per Product' =
+			
+			DIVIDE (
+			    [Revenue from Normal Sales],
+			    [Products Sold],
+			    0
+			)
+		formatString: "£"#,0.00;-"£"#,0.00;"£"#,0.00
+		lineageTag: cba9173d-7c12-497f-93e6-83a2abd5dd81
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-GB"}
+
+	measure 'Products Sold' =
+			
+			COUNTROWS (
+			    FILTER (
+			        VALUES ( dim_product[stock_code] ),
+			        CALCULATE ( [Units Sold Normal] ) > 0
+			    )
+			)
+		formatString: 0
+		lineageTag: 1d13110b-6104-4002-af89-1ff4f3c6c06c
+
+	measure 'Active Customers' =
+			
+			CALCULATE (
+			    DISTINCTCOUNT ( fact_sales_line[customer_key] ),
+			    fact_sales_line[invoice_type] = "normal",
+			    fact_sales_line[quantity] > 0,
+			    fact_sales_line[unit_price] > 0,
+			    fact_sales_line[customer_key] <> 0
+			)
+		formatString: 0
+		lineageTag: ebda32eb-5e12-42a7-ae9f-cd07e99cc983
+
+	measure 'Top Customer Revenue' =
+			
+			MAXX (
+			    VALUES ( dim_customer[customer_id] ),
+			    [Revenue from Normal Sales]
+			)
+		formatString: "£"#,0.00;-"£"#,0.00;"£"#,0.00
+		lineageTag: 3bc9cebd-ad8b-4eaa-95ea-46b5988a6092
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-GB"}
+
+	measure 'Identified Customer Revenue' =
+			
+			CALCULATE (
+			    [Revenue from Normal Sales],
+			    KEEPFILTERS ( dim_customer[customer_id] <> BLANK() )
+			)
+		lineageTag: 70b1e7de-d2a5-4084-84c2-2d1625e41f25
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Average Revenue per Customer' =
+			
+			DIVIDE (
+			    [Identified Customer Revenue],
+			    [Active Customers],
+			    0
+			)
+		formatString: "£"#,0.00;-"£"#,0.00;"£"#,0.00
+		lineageTag: 7b105bc1-fe74-4666-b197-0886c9999bd6
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-GB"}
+
+	measure 'Average Orders per Customer' =
+			
+			AVERAGEX (
+			    FILTER (
+			        VALUES ( dim_customer[customer_id] ),
+			        NOT ISBLANK ( dim_customer[customer_id] )
+			            && CALCULATE (
+			                [Total Orders]
+			            ) > 0
+			    ),
+			    CALCULATE ( [Total Orders] )
+			)
+		formatString: 0.00
+		lineageTag: 4e9048c6-af29-428a-8808-1c0114fe3e55
+
+	measure 'Monthly Active Customers' =
+			
+			CALCULATE (
+			    DISTINCTCOUNT ( fact_sales_line[customer_key] ),
+			    fact_sales_line[invoice_type] = "normal",
+			    fact_sales_line[quantity] > 0,
+			    fact_sales_line[unit_price] > 0,
+			    fact_sales_line[customer_key] <> 0
+			)
+		formatString: 0
+		lineageTag: 881d8b92-1afc-4a8f-8af2-685f1c428474
+
+	measure 'Total Countries' =
+			
+			DISTINCTCOUNTNOBLANK ( dim_country[country_name] )
+		formatString: 0
+		lineageTag: 704b5d5d-c032-4ca9-9249-179a916d6c05
+
+	measure 'Top Country Revenue' =
+			
+			MAXX (
+			    VALUES ( dim_country[country_name] ),
+			    [Revenue from Normal Sales]
+			)
+		formatString: "£"#,0.00;-"£"#,0.00;"£"#,0.00
+		lineageTag: ea2d70da-7f61-4e7b-883e-82c6509d56a7
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-GB"}
+
+	measure 'Top Country' =
+			
+			VAR CountryRanking =
+			    TOPN (
+			        1,
+			        ALLSELECTED ( dim_country[country_name] ),
+			        [Revenue from Normal Sales],
+			        DESC
+			    )
+			RETURN
+			    CONCATENATEX (
+			        CountryRanking,
+			        dim_country[country_name],
+			        ", "
+			    )
+		lineageTag: 67fa3475-d9f0-462a-8b19-340f7c1e5771
+
+	measure 'Average Revenue per Country' =
+			
+			DIVIDE (
+			    [Revenue from Normal Sales],
+			    DISTINCTCOUNTNOBLANK ( dim_country[country_name] ),
+			    0
+			)
+		formatString: "£"#,0.00;-"£"#,0.00;"£"#,0.00
+		lineageTag: 0b120f0f-15a8-4102-b44d-7e91c323c52e
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-GB"}
+
+	measure 'Top Country Orders' =
+			
+			VAR TopCountryTable =
+			    TOPN (
+			        1,
+			        ALLSELECTED ( dim_country[country_name] ),
+			        [Revenue from Normal Sales],
+			        DESC
+			    )
+			RETURN
+			    CALCULATE (
+			        [Total Orders],
+			        TopCountryTable
+			    )
+		formatString: 0
+		lineageTag: 87480b10-28ee-4536-85e8-e78b40155ca6
+
+	measure 'Returned Units' =
+			
+			ABS (
+			    CALCULATE (
+			        SUM ( fact_sales_line[quantity] ),
+			        fact_sales_line[invoice_type] = "normal",
+			        fact_sales_line[quantity] < 0,
+			        fact_sales_line[unit_price] > 0
+			    )
+			)
+		formatString: 0
+		lineageTag: bb8f7657-8c8a-479b-86e8-37ade6fe62b8
+
+	measure 'Return Rate' =
+			
+			DIVIDE (
+			    [Returned Units],
+			    [Units Sold Normal],
+			    0
+			)
+		lineageTag: cf61ccd0-ef60-4fe0-80c5-9bb4b5520352
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Returned Revenue' =
+			
+			ABS (
+			    CALCULATE (
+			        SUM ( fact_sales_line[line_amount] ),
+			        fact_sales_line[invoice_type] = "normal",
+			        fact_sales_line[quantity] < 0,
+			        fact_sales_line[unit_price] > 0
+			    )
+			)
+		lineageTag: a9fb98a2-da31-4e6d-b6c7-1d81e221c9af
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Test Negative Quantity' =
+			
+			CALCULATE (
+			    COUNTROWS ( fact_sales_line ),
+			    fact_sales_line[quantity] < 0
+			)
+		formatString: 0
+		lineageTag: 2aabdaf3-e58e-4c7a-8bc3-88dfdbdd441a
+
+	measure 'Test Valid Returns' =
+			
+			CALCULATE (
+			    COUNTROWS ( fact_sales_line ),
+			    fact_sales_line[invoice_type] = "normal",
+			    fact_sales_line[quantity] < 0,
+			    fact_sales_line[unit_price] > 0
+			)
+		formatString: 0
+		lineageTag: ab0bd94f-a890-44bf-90b2-b946ce2b5841
+
+	measure 'Test Negative Normal' =
+			
+			CALCULATE (
+			    COUNTROWS ( fact_sales_line ),
+			    fact_sales_line[quantity] < 0,
+			    fact_sales_line[invoice_type] = "normal"
+			)
+		formatString: 0
+		lineageTag: 03278dfc-67ae-4778-85b7-8d69984aee3b
+
+	measure 'Test Negative Normal Nonpositive Price' =
+			
+			CALCULATE (
+			    COUNTROWS ( fact_sales_line ),
+			    fact_sales_line[invoice_type] = "normal",
+			    fact_sales_line[quantity] < 0,
+			    fact_sales_line[unit_price] <= 0
+			)
+		formatString: 0
+		lineageTag: 8b3ad614-514c-4456-a115-7d557ae7779e
+
+	measure 'Test Returned Units' =
+			
+			ABS (
+			    CALCULATE (
+			        SUM ( fact_sales_line[quantity] ),
+			        fact_sales_line[invoice_type] = "normal",
+			        fact_sales_line[quantity] < 0
+			    )
+			)
+		formatString: 0
+		lineageTag: 397dee32-d067-4dfc-a1f6-b011757f34ee
+
+	measure 'Test Returned Revenue' =
+			
+			ABS (
+			    CALCULATE (
+			        SUM ( fact_sales_line[line_amount] ),
+			        fact_sales_line[invoice_type] = "normal",
+			        fact_sales_line[quantity] < 0
+			    )
+			)
+		lineageTag: b25aa18d-218d-44a8-b02e-9a4eb1d835df
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Test Returns Zero Price' =
+			
+			CALCULATE (
+			    COUNTROWS ( fact_sales_line ),
+			    fact_sales_line[invoice_type] = "normal",
+			    fact_sales_line[quantity] < 0,
+			    fact_sales_line[unit_price] = 0
+			)
+		formatString: 0
+		lineageTag: 79be1ed2-e243-4078-b97b-fbf11c500127
+
+	measure 'Test Returns Negative Price' =
+			
+			CALCULATE (
+			    COUNTROWS ( fact_sales_line ),
+			    fact_sales_line[invoice_type] = "normal",
+			    fact_sales_line[quantity] < 0,
+			    fact_sales_line[unit_price] < 0
+			)
+		formatString: 0
+		lineageTag: 1cf9f3c4-cb2a-4e77-849d-a40bbc4e7b50
+
+	measure 'Test Return Lines' =
+			
+			CALCULATE (
+			    COUNTROWS ( fact_sales_line ),
+			    fact_sales_line[invoice_type] = "normal",
+			    fact_sales_line[quantity] < 0
+			)
+		formatString: 0
+		lineageTag: df028334-ec78-44eb-9946-46bd0e7dc414
+
+	measure 'Minimum Return Quantity' =
+			
+			CALCULATE (
+			    MIN ( fact_sales_line[quantity] ),
+			    fact_sales_line[invoice_type] = "normal",
+			    fact_sales_line[quantity] < 0
+			)
+		formatString: 0
+		lineageTag: e7b4b8aa-869a-4ea1-9acc-47e27fc1ef59
+
+	measure 'Test Extreme Returns' =
+			
+			CALCULATE (
+			    COUNTROWS ( fact_sales_line ),
+			    fact_sales_line[invoice_type] = "normal",
+			    fact_sales_line[quantity] <= -100
+			)
+		formatString: 0
+		lineageTag: e3b1e291-78b7-4a05-8faa-80a153caa9bc
+
+	measure 'Test Small Returns' =
+			
+			ABS (
+			    CALCULATE (
+			        SUM ( fact_sales_line[quantity] ),
+			        fact_sales_line[invoice_type] = "normal",
+			        fact_sales_line[quantity] < 0,
+			        fact_sales_line[quantity] > -100
+			    )
+			)
+		formatString: 0
+		lineageTag: 2354434e-6312-4d7e-83ac-2c83895c9960
+
+	measure 'Test Extreme Return Units' =
+			
+			ABS (
+			    CALCULATE (
+			        SUM ( fact_sales_line[quantity] ),
+			        fact_sales_line[invoice_type] = "normal",
+			        fact_sales_line[quantity] <= -100
+			    )
+			)
+		formatString: 0
+		lineageTag: 9ed8a72f-86c8-4654-9b92-c1733999de71
+
+	measure 'Negative Quantity Units' =
+			
+			ABS (
+			    CALCULATE (
+			        SUM ( fact_sales_line[quantity] ),
+			        fact_sales_line[invoice_type] = "normal",
+			        fact_sales_line[quantity] < 0
+			    )
+			)
+		formatString: 0
+		lineageTag: 38bfe254-80ef-4ac8-9ba7-0e136b0f5cba
+
+	measure 'Negative Quantity Lines' =
+			
+			CALCULATE (
+			    COUNTROWS ( fact_sales_line ),
+			    fact_sales_line[invoice_type] = "normal",
+			    fact_sales_line[quantity] < 0
+			)
+		formatString: 0
+		lineageTag: ec0479d0-c8b7-4a94-b5c1-9d28142a5d22
+
+	measure 'Negative Lines with Zero Price' =
+			
+			CALCULATE (
+			    COUNTROWS ( fact_sales_line ),
+			    fact_sales_line[invoice_type] = "normal",
+			    fact_sales_line[quantity] < 0,
+			    fact_sales_line[unit_price] = 0
+			)
+		formatString: 0
+		lineageTag: 9cd38ed7-4f14-4b09-ac16-6ecbafc739e7
+
+	measure 'Negative Lines with Nonzero Price' =
+			
+			CALCULATE (
+			    COUNTROWS ( fact_sales_line ),
+			    REMOVEFILTERS (),
+			    fact_sales_line[invoice_type] = "normal",
+			    fact_sales_line[quantity] < 0,
+			    fact_sales_line[unit_price] <> 0
+			)
+		formatString: 0
+		lineageTag: 593baf67-d081-45a6-aea9-4f4ad3ed0fed
+
+	measure 'Check Negative Normal Lines' =
+			
+			COALESCE (
+			    CALCULATE (
+			        COUNTROWS ( fact_sales_line ),
+			        REMOVEFILTERS ( fact_sales_line ),
+			        fact_sales_line[invoice_type] = "normal",
+			        fact_sales_line[quantity] < 0
+			    ),
+			    0
+			)
+		formatString: 0
+		lineageTag: dfa04ca7-88e9-4ce3-98e8-ccc6d1b34d38
+
+	measure 'Check Zero Price Lines' =
+			
+			CALCULATE (
+			    COUNTROWS ( fact_sales_line ),
+			    REMOVEFILTERS ( fact_sales_line ),
+			    fact_sales_line[invoice_type] = "normal",
+			    fact_sales_line[quantity] < 0,
+			    fact_sales_line[unit_price] = 0
+			)
+		formatString: 0
+		lineageTag: 55b5e839-7f4f-4ea7-89cf-1495da3b51b5
+
+	measure 'Zero-Value Negative Lines' =
+			
+			CALCULATE (
+			    COUNTROWS ( fact_sales_line ),
+			    fact_sales_line[invoice_type] = "normal",
+			    fact_sales_line[quantity] < 0,
+			    fact_sales_line[unit_price] = 0
+			)
+		formatString: 0
+		lineageTag: e86b94c1-15c2-47a4-8563-6c819b5b5184
+
+	measure 'Negative Quantity Units by Country' =
+			
+			[Negative Quantity Units]
+		formatString: 0
+		lineageTag: 8c2cf76d-cb27-485a-8bee-f1ad779576f6
+
+	measure 'Monthly Cancellation Rate' =
+			
+			DIVIDE (
+			    [Cancelled Orders],
+			    [Total Orders] + [Cancelled Orders],
+			    0
+			)
+		formatString: 0.00\ %;-0.00\ %;0.00\ %
+		lineageTag: 7db76586-44ea-455a-b84a-152d7743609b
+
+	column sales_line_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 67d34219-e673-4b2e-9316-89a9e2738773
+		summarizeBy: sum
+		sourceColumn: sales_line_key
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column staging_id
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 6b69346d-9323-4118-9f60-5e51e97be6cf
+		summarizeBy: sum
+		sourceColumn: staging_id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column date_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 8fb8289a-f9d8-408c-a035-a1f84e95cb76
+		summarizeBy: none
+		sourceColumn: date_key
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 9c543d75-d530-4673-8e62-48fe048d439a
+		summarizeBy: none
+		sourceColumn: product_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 07e5eccb-9d1d-4282-99d2-6ac732d864cb
+		summarizeBy: none
+		sourceColumn: customer_key
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column country_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: b429f7f3-6303-47f0-92a8-9e3453733281
+		summarizeBy: none
+		sourceColumn: country_key
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column invoice_no
+		dataType: string
+		lineageTag: e4e26f9d-5450-4100-b388-5bbacd278924
+		summarizeBy: none
+		sourceColumn: invoice_no
+
+		annotation SummarizationSetBy = Automatic
+
+	column invoice_type
+		dataType: string
+		lineageTag: 51086444-2841-443b-b306-7464e0089779
+		summarizeBy: none
+		sourceColumn: invoice_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column quantity
+		dataType: int64
+		formatString: 0
+		lineageTag: 584b8bc2-adf1-440d-842d-31ca56ce0ceb
+		summarizeBy: none
+		sourceColumn: quantity
+
+		annotation SummarizationSetBy = User
+
+	column unit_price
+		dataType: double
+		formatString: 0
+		lineageTag: fe084d28-9c3c-4402-b905-2bf894dbb664
+		summarizeBy: none
+		sourceColumn: unit_price
+
+		annotation SummarizationSetBy = User
+
+	column line_amount
+		dataType: double
+		lineageTag: d64221ce-1120-47f0-a052-25e46f9fbefa
+		summarizeBy: none
+		sourceColumn: line_amount
+
+		annotation SummarizationSetBy = User
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column has_negative_quantity
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 1ed20d85-88b2-4638-ab21-7295741e2c8d
+		summarizeBy: none
+		sourceColumn: has_negative_quantity
+
+		annotation SummarizationSetBy = Automatic
+
+	column has_zero_unit_price
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 6c59038a-810e-4f67-ba2c-b1c96ef298ef
+		summarizeBy: none
+		sourceColumn: has_zero_unit_price
+
+		annotation SummarizationSetBy = Automatic
+
+	column has_negative_unit_price
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 33f609cf-dc50-4fba-9db8-583afcd8e3e8
+		summarizeBy: none
+		sourceColumn: has_negative_unit_price
+
+		annotation SummarizationSetBy = Automatic
+
+	column invoice_hour
+		dataType: int64
+		formatString: 0
+		lineageTag: ddce8c05-8843-4a97-8db0-c9a4b551d45a
+		summarizeBy: sum
+		sourceColumn: invoice_hour
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_sales_line = m
+		mode: import
+		source =
+				let
+				    Source = PostgreSQL.Database("localhost:5432", "retail_intelligence"),
+				    analytics_fact_sales_line = Source{[Schema="analytics",Item="fact_sales_line"]}[Data]
+				in
+				    analytics_fact_sales_line
+
+	changedProperty = Name
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

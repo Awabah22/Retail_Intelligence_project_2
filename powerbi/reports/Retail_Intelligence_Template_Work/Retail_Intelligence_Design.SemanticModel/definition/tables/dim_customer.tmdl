@@ -1,0 +1,38 @@
+table dim_customer
+	lineageTag: 15040dbd-34dc-4808-93fe-e0a0d5823282
+
+	column customer_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: af24b430-1b22-4dee-96fe-b7f22aff5291
+		summarizeBy: none
+		sourceColumn: customer_key
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_id
+		dataType: string
+		lineageTag: 8a498380-0171-42ea-a8d6-a34eb6328593
+		summarizeBy: none
+		sourceColumn: customer_id
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_customer = m
+		mode: import
+		source =
+				let
+				    Source = PostgreSQL.Database("localhost:5432", "retail_intelligence"),
+				    analytics_dim_customer = Source{[Schema="analytics",Item="dim_customer"]}[Data]
+				in
+				    analytics_dim_customer
+
+	changedProperty = Name
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

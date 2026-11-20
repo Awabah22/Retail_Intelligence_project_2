@@ -1,0 +1,167 @@
+table dim_date
+	lineageTag: c7dade1a-dca0-4bdc-8cf9-7350b96e1ad8
+	dataCategory: Time
+
+	column date_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 152d8386-55e9-4d0c-b28e-1896e8cc4085
+		summarizeBy: none
+		sourceColumn: date_key
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column full_date
+		dataType: dateTime
+		isKey
+		formatString: Long Date
+		lineageTag: 567fde8d-a56e-492f-bfbb-38699a61390e
+		summarizeBy: none
+		sourceColumn: full_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column year_number
+		dataType: int64
+		formatString: 0
+		lineageTag: 997b41e4-e846-4f67-b074-c99042f12505
+		summarizeBy: none
+		sourceColumn: year_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column quarter_number
+		dataType: int64
+		formatString: 0
+		lineageTag: 4606bc5f-8693-450c-8c96-b7d75ee21065
+		summarizeBy: none
+		sourceColumn: quarter_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column month_number
+		dataType: int64
+		formatString: 0
+		lineageTag: 59f27e08-4cee-46fd-9d34-07b5503a9fff
+		summarizeBy: none
+		sourceColumn: month_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column month_name
+		dataType: string
+		lineageTag: a3bd1988-99e0-444a-9694-3676c47c20ab
+		summarizeBy: none
+		sourceColumn: month_name
+		sortByColumn: month_number
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column day_of_month
+		dataType: int64
+		formatString: 0
+		lineageTag: e14ab2ca-8e8d-4d25-841b-2ba1372c90af
+		summarizeBy: none
+		sourceColumn: day_of_month
+
+		annotation SummarizationSetBy = Automatic
+
+	column day_of_week
+		dataType: int64
+		formatString: 0
+		lineageTag: 1641cb53-2939-4641-b3a1-1874cfdd34e9
+		summarizeBy: none
+		sourceColumn: day_of_week
+
+		annotation SummarizationSetBy = Automatic
+
+	column day_name
+		dataType: string
+		lineageTag: 59bd5534-7b96-4287-ac29-19c68652cb22
+		summarizeBy: none
+		sourceColumn: day_name
+		sortByColumn: day_of_week
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_weekend
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 806c76d5-2d2f-4485-8ec6-0c668ace92b0
+		summarizeBy: none
+		sourceColumn: is_weekend
+
+		annotation SummarizationSetBy = Automatic
+
+	column YearMonth =
+			
+			FORMAT ( dim_date[full_date], "YYYY-MM" )
+		lineageTag: dff7101a-6028-4bca-92c9-69d3379fdc5b
+		summarizeBy: none
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column Quarter =
+			
+			"Q" & QUARTER ( dim_date[full_date] )
+		lineageTag: 5c238d7c-8885-42d1-bf72-d4f30dc4d9a0
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column YearQuarter =
+			
+			FORMAT ( dim_date[full_date], "YYYY" )
+			    & " Q"
+			    & QUARTER ( dim_date[full_date] )
+		lineageTag: e4efa84b-7411-44c2-8fc5-b73d33691cac
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Year' =
+			
+			FORMAT ( dim_date[full_date], "MMM YYYY" )
+		lineageTag: f14b4b37-0a29-4d26-b5f1-dde6e50d12b0
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Year Sort' =
+			
+			YEAR ( dim_date[full_date] ) * 100
+			    + MONTH ( dim_date[full_date] )
+		formatString: 0
+		lineageTag: 9ccd4c66-2571-4348-a9d5-7971c914334f
+		summarizeBy: none
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_date = m
+		mode: import
+		source =
+				let
+				    Source = PostgreSQL.Database("localhost:5432", "retail_intelligence"),
+				    analytics_dim_date = Source{[Schema="analytics",Item="dim_date"]}[Data]
+				in
+				    analytics_dim_date
+
+	changedProperty = Name
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

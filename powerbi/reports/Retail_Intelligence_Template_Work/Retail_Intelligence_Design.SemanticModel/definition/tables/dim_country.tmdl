@@ -1,0 +1,52 @@
+table dim_country
+	lineageTag: c2200756-09eb-4b9b-8e89-449a5ad8766a
+
+	column country_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: e6e2f8c8-f753-421c-b991-5c5e66e8d6d1
+		summarizeBy: none
+		sourceColumn: country_key
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column country_name
+		dataType: string
+		lineageTag: e575325c-e0f8-4c84-b0e7-441e38b0af7c
+		summarizeBy: none
+		sourceColumn: country_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Country Map' =
+			
+			SWITCH (
+			    dim_country[country_name],
+			    "EIRE", "Ireland",
+			    "USA", "United States",
+			    dim_country[country_name]
+			)
+		lineageTag: 13395a34-5bc1-4820-bad2-193fd797154a
+		dataCategory: Country
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_country = m
+		mode: import
+		source =
+				let
+				    Source = PostgreSQL.Database("localhost:5432", "retail_intelligence"),
+				    analytics_dim_country = Source{[Schema="analytics",Item="dim_country"]}[Data]
+				in
+				    analytics_dim_country
+
+	changedProperty = Name
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

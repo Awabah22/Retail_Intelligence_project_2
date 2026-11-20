@@ -1,0 +1,132 @@
+# ==================================================
+# RETAIL INTELLIGENCE - GITIGNORE
+# ==================================================
+
+
+# --------------------------------------------------
+# 1. DATASET AND LOCAL DATA
+# --------------------------------------------------
+
+# Source dataset (download separately from UCI)
+data/raw/Online Retail.xlsx
+
+# Other local raw data files
+data/raw/*.csv
+data/raw/*.xlsx
+data/raw/*.xls
+
+
+# --------------------------------------------------
+# 2. POWER BI - LOCAL SETTINGS AND CACHE
+# --------------------------------------------------
+
+# Power BI local settings
+**/.pbi/localSettings.json
+**/.pbi/
+
+# Power BI cache
+**/.pbi/cache.abf
+
+
+# --------------------------------------------------
+# 3. PYTHON - TEMPORARY FILES
+# --------------------------------------------------
+
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Python package/build artifacts
+build/
+dist/
+*.egg-info/
+
+
+# --------------------------------------------------
+# 4. JUPYTER NOTEBOOKS
+# --------------------------------------------------
+
+.ipynb_checkpoints/
+
+
+# --------------------------------------------------
+# 5. OPERATING SYSTEM FILES
+# --------------------------------------------------
+
+# Windows
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+
+# --------------------------------------------------
+# 6. EDITORS AND IDEs
+# --------------------------------------------------
+
+# Visual Studio Code
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# JetBrains
+.idea/
+
+
+# --------------------------------------------------
+# 7. LOGS AND TEMPORARY FILES
+# --------------------------------------------------
+
+*.log
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+
+
+# --------------------------------------------------
+# 8. ENVIRONMENT VARIABLES AND SECRETS
+# --------------------------------------------------
+
+.env
+.env.*
+!.env.example
+
+# Credentials and private keys
+*.pem
+*.key
+credentials.json
+secrets.json
+
+
+# --------------------------------------------------
+# 9. DATABASE BACKUPS AND EXPORTS
+# --------------------------------------------------
+
+*.dump
+*.backup
+*.bak
+*.sql.gz
+*.tar
+*.tar.gz
+
+
+# --------------------------------------------------
+# 10. POWER BI TEMPORARY FILES
+# --------------------------------------------------
+
+# Power BI temporary lock files
+*.pbi.lock
+
+# Power BI temporary recovery files
+*.pbix.autorecover

@@ -1,0 +1,115 @@
+{
+  "name": "E-commerce Performance",
+  "dataColors": [
+    "#E2541B",
+    "#C47E09",
+    "#DB2777",
+    "#7C3AED",
+    "#0891B2",
+    "#619C0C",
+    "#B45309",
+    "#475569"
+  ],
+  "background": "#FBF6F0",
+  "foreground": "#2A1A12",
+  "tableAccent": "#E2541B",
+  "good": "#15803D",
+  "neutral": "#B45309",
+  "bad": "#BE123C",
+  "maximum": "#15803D",
+  "center": "#B45309",
+  "minimum": "#BE123C",
+  "null": "#6E5648",
+  "textClasses": {
+    "callout": {
+      "fontFace": "Segoe UI",
+      "fontSize": 30,
+      "color": "#2A1A12"
+    },
+    "title": {
+      "fontFace": "Segoe UI",
+      "fontSize": 13,
+      "color": "#2A1A12"
+    },
+    "header": {
+      "fontFace": "Segoe UI",
+      "fontSize": 11,
+      "color": "#2A1A12"
+    },
+    "label": {
+      "fontFace": "Segoe UI",
+      "fontSize": 10,
+      "color": "#2A1A12"
+    }
+  },
+  "visualStyles": {
+    "page": {
+      "*": {
+        "background": [
+          {
+            "color": {
+              "solid": {
+                "color": "#FBF6F0"
+              }
+            },
+            "transparency": 0
+          }
+        ],
+        "outspace": [
+          {
+            "color": {
+              "solid": {
+                "color": "#FBF6F0"
+              }
+            },
+            "transparency": 0
+          }
+        ]
+      }
+    },
+    "*": {
+      "*": {
+        "background": [
+          {
+            "show": false,
+            "color": {
+              "solid": {
+                "color": "#FFFFFF"
+              }
+            },
+            "transparency": 100
+          }
+        ],
+        "border": [
+          {
+            "show": false,
+            "color": {
+              "solid": {
+                "color": "#D9D6D4"
+              }
+            },
+            "radius": 8
+          }
+        ],
+        "title": [
+          {
+            "show": true,
+            "fontFamily": "Segoe UI",
+            "fontSize": 13,
+            "fontColor": {
+              "solid": {
+                "color": "#2A1A12"
+              }
+            },
+            "alignment": "left"
+          }
+        ],
+        "dropShadow": [
+          {
+            "show": false
+          }
+        ]
+      }
+    }
+  }
+}

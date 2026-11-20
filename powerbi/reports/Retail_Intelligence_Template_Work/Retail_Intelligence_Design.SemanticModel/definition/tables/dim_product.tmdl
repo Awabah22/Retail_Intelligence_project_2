@@ -1,0 +1,46 @@
+table dim_product
+	lineageTag: 83b5f53b-4c53-4b5b-a145-a14cd1382242
+
+	column product_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 69f5395a-56cd-4944-b3e5-e613f9a02f97
+		summarizeBy: none
+		sourceColumn: product_key
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column stock_code
+		dataType: string
+		lineageTag: 51a11695-2000-4c76-af48-30c474f12e43
+		summarizeBy: none
+		sourceColumn: stock_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_description
+		dataType: string
+		lineageTag: c72b15b6-5056-4d83-aeb4-79f22ba3f1f8
+		summarizeBy: none
+		sourceColumn: product_description
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_product = m
+		mode: import
+		source =
+				let
+				    Source = PostgreSQL.Database("localhost:5432", "retail_intelligence"),
+				    analytics_dim_product = Source{[Schema="analytics",Item="dim_product"]}[Data]
+				in
+				    analytics_dim_product
+
+	changedProperty = Name
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

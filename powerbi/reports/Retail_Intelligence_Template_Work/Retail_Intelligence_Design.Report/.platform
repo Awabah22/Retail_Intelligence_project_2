@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "Retail_Intelligence_Design"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "ec5e1f94-ed5e-4127-ae5e-22baef5e244d"
+  }
+}

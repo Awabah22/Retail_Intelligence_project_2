@@ -1,0 +1,24 @@
+relationship f7466207-b036-44e7-987a-93a532625228
+	fromColumn: fact_sales_line.country_key
+	toColumn: dim_country.country_key
+
+	annotation PBI_IsFromSource = FS
+
+relationship ddec68f9-3df7-47f4-861e-da2b897f5631
+	fromColumn: fact_sales_line.customer_key
+	toColumn: dim_customer.customer_key
+
+	annotation PBI_IsFromSource = FS
+
+relationship 033032b2-6918-44f8-a2b6-28e67d4bfe2c
+	fromColumn: fact_sales_line.date_key
+	toColumn: dim_date.date_key
+
+	annotation PBI_IsFromSource = FS
+
+relationship 6ffa2b9d-bfec-486c-9b5f-7af2ef63f979
+	fromColumn: fact_sales_line.product_key
+	toColumn: dim_product.product_key
+
+	annotation PBI_IsFromSource = FS
+

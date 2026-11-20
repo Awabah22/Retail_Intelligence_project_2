@@ -1,0 +1,82 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 1100.3649635036495,
+        "y": 0
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 1993.6839625158775,
+            "y": 519.89893224567527
+          },
+          "nodeIndex": "dim_country",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 2507.9425197886558,
+            "y": 141.28247248946724
+          },
+          "nodeIndex": "dim_customer",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 2220.88168760308,
+            "y": 167.84624071924856
+          },
+          "nodeIndex": "fact_sales_line",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 2219.2498816596853,
+            "y": 0
+          },
+          "nodeIndex": "dim_product",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 2330.9729353768771,
+            "y": 521.56073064640668
+          },
+          "nodeIndex": "dim_date",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        }
+      ],
+      "name": "Toutes les tables",
+      "zoomValue": 60.888888888888893,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "Toutes les tables",
+  "defaultDiagram": "Toutes les tables"
+}
